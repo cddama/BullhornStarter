@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.lang.Object;
+
+
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -22,7 +25,9 @@ public class LoginServlet extends HttpServlet {
 			doPost(request,response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	
+	{
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String action = request.getParameter("action");
@@ -34,7 +39,16 @@ public class LoginServlet extends HttpServlet {
 		//first... check that the action variable contains something
 		//then the code below will determine if they clicked logout and kill the session
 		//before sending the user back to the login page
-		
+		if(!action.isEmpty()||!(action==null)){
+		    if (request.getParameter("action").toString().equals("logout")){
+		        //Go back to login.jsp. 
+		        nextPage = "/login.jsp";
+		        response.sendRedirect(request.getContextPath() + nextPage);
+		        return;//return here exits the method and prevents an error
+		    }else{
+		        nextPage = "/home.jsp";
+		    }
+		}
 
 			
 		//putting a blank message just ensures I have a blank message.Since the message is set in the session
@@ -44,7 +58,18 @@ public class LoginServlet extends HttpServlet {
 
 		//Existential question: Does the user exist? Are they really who they say they are???
 		//And while you're at it... what is the meaning of life?
-		if (DbUser.isValidUser(email,password)){
+		
+		
+	//
+		Boolean val = DbUser.isValidUser(email, password);
+		//Boolean val = DbUser.isValidUser(email,password);
+		String str_val = (String)(val.toString());
+		response.getWriter().append(str_val);
+				
+			/*
+			 
+			 * 	if (DbUser.isValidUser(email,password)){
+			 
 			//add the valid user to the session
 			session.setAttribute("user", DbUser.getUserByEmail(email));
 			nextPage = "/home.jsp";
@@ -53,10 +78,13 @@ public class LoginServlet extends HttpServlet {
 			session.invalidate();
 			//they put in the wrong password or don't exist in the database
 			nextPage = "/login.jsp";
-		}
+		}   
+		
+		*
+		*/
 
 		//Your work here is done. Redirect to next page as indicated by the value of the nextURL variable
-		response.sendRedirect(request.getContextPath() + nextPage);
+	//	response.sendRedirect(request.getContextPath() + nextPage);
 	
 	}
 

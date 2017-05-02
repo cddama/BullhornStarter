@@ -10,6 +10,5 @@
 <jsp:include page="navbar.jsp"></jsp:include>
 <h1>this is the feedback page</h1>
 
-
 </body>
 </html>
